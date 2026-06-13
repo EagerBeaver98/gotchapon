@@ -1,0 +1,19 @@
+{
+  "twitch_channel": "your_broadcaster_channel_name",
+  "bot_username": "your_bot_account_name",
+  "client_id": "paste_your_client_id_here",
+  "client_secret": "paste_your_client_secret_here",
+  "scopes": {
+    "broadcaster": ["channel:read:redemptions"],
+    "bot": []
+  },
+  "broadcaster_access_token": "",
+  "broadcaster_refresh_token": "",
+  "bot_access_token": "",
+  "bot_refresh_token": "",
+  "obs_host": "localhost",
+  "obs_port": 4455,
+  "obs_password": "",
+  "overlay_port": 8080,
+  "overlay_duration_seconds": 8
+}
