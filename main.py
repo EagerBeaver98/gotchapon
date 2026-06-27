@@ -3,6 +3,7 @@ import twitchio
 import asyncio
 import logging
 import os
+from rewards import RewardManager
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,6 +16,8 @@ class Gotchapon(twitchio.Client):
         )
         self.owner_id=str(config["owner_id"])
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
+
+        self.Rewards = RewardManager(config)
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload):
         await self.add_token(payload.access_token, payload.refresh_token)
@@ -47,14 +50,15 @@ class Gotchapon(twitchio.Client):
 
         await chat_subscription(self, chat_payload)
         await redeem_subscription(self, redeem_payload)
-        
+
         
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter}")
 
     
-    # async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
-    #     print("channel points redeemed")
+    async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
+        print("channel points redeemed")
+
 
 
 
