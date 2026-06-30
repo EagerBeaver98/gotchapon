@@ -2,3 +2,4 @@
 /.venv
 config.json
 .tio.tokens.json
+./__pycache__
