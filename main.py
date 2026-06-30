@@ -17,7 +17,7 @@ class Gotchapon(twitchio.Client):
         self.owner_id=str(config["owner_id"])
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
 
-        self.Rewards = RewardManager(config)
+        self.Rewards = RewardManager()
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload):
         await self.add_token(payload.access_token, payload.refresh_token)
@@ -27,7 +27,7 @@ class Gotchapon(twitchio.Client):
             user_id=self.bot_id
         )
 
-        redeem_payload = twitchio.eventsub.ChannelPointsRewardAddSubscription(
+        redeem_payload = twitchio.eventsub.ChannelPointsRedeemAddSubscription(
             broadcaster_user_id=self.owner_id,
             user_id=self.bot_id
         )
@@ -43,7 +43,7 @@ class Gotchapon(twitchio.Client):
             user_id=self.bot_id
         )
 
-        redeem_payload = twitchio.eventsub.ChannelPointsRewardAddSubscription(
+        redeem_payload = twitchio.eventsub.ChannelPointsRedeemAddSubscription(
             broadcaster_user_id=self.owner_id,
             user_id=self.bot_id
         )
@@ -54,9 +54,9 @@ class Gotchapon(twitchio.Client):
         
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter}")
-        if payload.text[:7] == "!redeem":
+        if payload.text.startswith("!redeem"):
             print("redeeming Gotchapon")
-            print(f"Reward redeemed {self.Rewards.redeemRoulette()}")
+            print(f"Reward redeemed {self.Rewards.redeem_roulette()}")
 
     
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
@@ -67,17 +67,17 @@ class Gotchapon(twitchio.Client):
 
 
 
-async def redeem_subscription(self, redeem_payload): 
+async def redeem_subscription(client, redeem_payload): 
     try:
-        await self.subscribe_websocket(payload=redeem_payload, as_bot=True)
+        await client.subscribe_websocket(payload=redeem_payload, as_bot=True)
         print("Channel Point Redeem EventSub successful")
     except twitchio.HTTPException as e:
         print(f"Status: {e.status}")
         print(f"Details: {e.extra.get('message')}")
 
-async def chat_subscription(self, chat_payload): 
+async def chat_subscription(client, chat_payload): 
     try: 
-        await self.subscribe_websocket(payload=chat_payload, as_bot=True)
+        await client.subscribe_websocket(payload=chat_payload, as_bot=True)
         print("Chat Message EventSub subscription successful")
     except twitchio.HTTPException as e:
         print(f"Status: {e.status}")

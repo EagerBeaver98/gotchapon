@@ -1,27 +1,44 @@
 import os
 import random
 
-rewarddir = os.getcwd() + "/rewards"
 class RewardManager():
-    def __init__(self, config):
+    def __init__(self):
+        
+        self.rewarddir = os.getcwd() + "/rewards"
+        
+        
+
+    def redeem_roulette(self):
         # Creates dictionary of folders in rewards, formatted as {Parent folder: [List of files in parent]}
-        self.rewardlist = {}
-        self.rewardtiers = list(os.listdir(rewarddir))
-        for r in self.rewardtiers:
-            rewarditems = list(os.listdir(rewarddir + "/" + r))
+        rewardlist = {}
+        rewardtiers = list(os.listdir(self.rewarddir))
+        for r in rewardtiers: 
+            tierpath = self.rewarddir + "/" + r
+            # Checks if folder is empty
+            if len(os.listdir(tierpath)) == 0:
+                print(f"Folder {r} is empty, skipping")
+            else:
+                rewarditems = list(os.listdir(tierpath))
+                rewardlist[str(r)] = list()
 
-            self.rewardlist[str(r)] = list()
+                for i in rewarditems:
+                    try:
+                        rewardlist[r].append(i)
+                    except: 
+                        print(f"Discarding empty folder: {r}")
 
-            for i in rewarditems:
-                self.rewardlist[r].append(i)
-
-    def redeemRoulette(self):
         # returns randomly selected file's path from folder structure
         probabilitykeys = []
-        for k in self.rewardlist.keys():
-            probabilitykeys.append(int(k))
+        for k in rewardlist.keys():
+            # Checks if folder name is a number
+            try:
+                probabilitykeys.append(int(k))
+            except:
+                print(f"Excluding folder {k}")
         chosenkey = str(random.choices(probabilitykeys, weights=probabilitykeys)[0])
-        return rewarddir + "/" + chosenkey + "/" + random.choice(self.rewardlist[chosenkey])
+            
+        
+        return self.rewarddir + "/" + chosenkey + "/" + random.choice(rewardlist[chosenkey])
     
 
        
@@ -29,8 +46,8 @@ class RewardManager():
         
 def main():
     print("testing rewards manager")
-    reward = RewardManager("test")
-    print(reward.redeemRoulette())
+    reward = RewardManager()
+    print(reward.redeem_roulette())
 
 if __name__ == "__main__":
     main()
