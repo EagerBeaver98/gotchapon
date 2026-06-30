@@ -54,6 +54,9 @@ class Gotchapon(twitchio.Client):
         
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter}")
+        if payload.text[:7] == "!redeem":
+            print("redeeming Gotchapon")
+            print(f"Reward redeemed {self.Rewards.redeemRoulette()}")
 
     
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):

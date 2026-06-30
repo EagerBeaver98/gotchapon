@@ -21,7 +21,7 @@ class RewardManager():
         for k in self.rewardlist.keys():
             probabilitykeys.append(int(k))
         chosenkey = str(random.choices(probabilitykeys, weights=probabilitykeys)[0])
-        return rewarddir + chosenkey + "/" + random.choice(self.rewardlist[chosenkey])
+        return rewarddir + "/" + chosenkey + "/" + random.choice(self.rewardlist[chosenkey])
     
 
        
