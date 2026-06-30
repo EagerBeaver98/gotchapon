@@ -22,10 +22,8 @@ class RewardManager():
                 rewardlist[str(r)] = list()
 
                 for i in rewarditems:
-                    try:
-                        rewardlist[r].append(i)
-                    except: 
-                        print(f"Discarding empty folder: {r}")
+                    rewardlist[r].append(i)
+                    
 
         # returns randomly selected file's path from folder structure
         probabilitykeys = []

@@ -4,6 +4,7 @@ import asyncio
 import logging
 import os
 from rewards import RewardManager
+from overlay import OverlayManager
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,9 +15,10 @@ class Gotchapon(twitchio.Client):
             client_secret=config["client_secret"],
             bot_id=str(config["bot_id"])
         )
+        self.config = config
         self.owner_id=str(config["owner_id"])
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
-
+        self.RedeemOverlay = OverlayManager(jsonconfig=self.config)
         self.Rewards = RewardManager()
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload):
@@ -56,7 +58,12 @@ class Gotchapon(twitchio.Client):
         print(f"Chat message recieved {payload.text} from user {payload.chatter}")
         if payload.text.startswith("!redeem"):
             print("redeeming Gotchapon")
-            print(f"Reward redeemed {self.Rewards.redeem_roulette()}")
+            redeemedrewardpath = self.Rewards.redeem_roulette()
+            redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
+            print(f"Reward redeemed {redeemedrewardname}")
+            # reward= {"name": redeemedrewardname, "path": redeemedrewardpath}, 
+            
+
 
     
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
