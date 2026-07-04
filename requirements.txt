@@ -19,4 +19,5 @@ setuptools==82.0.1
 twitchio==3.2.2
 urllib3==2.7.0
 websocket-client==1.9.0
+websockets==16.0
 yarl==1.24.2

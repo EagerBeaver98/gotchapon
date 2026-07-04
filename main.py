@@ -61,8 +61,8 @@ class Gotchapon(twitchio.Client):
             redeemedrewardpath = self.Rewards.redeem_roulette()
             redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
             print(f"Reward redeemed {redeemedrewardname}")
-            # reward= {"name": redeemedrewardname, "path": redeemedrewardpath}, 
-            
+            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter}, 
+            self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
 
     
