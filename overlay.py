@@ -10,6 +10,7 @@ class OverlayManager():
     def __init__(self, jsonconfig):
         self.host = jsonconfig["obs_host"]
         self.obsport = jsonconfig["obs_port"]
+        self.wsport = jsonconfig["websocket_port"]
         self.port = jsonconfig["overlay_port"]
         self.clients = set()
 
@@ -28,7 +29,7 @@ class OverlayManager():
             print("No overlay clients detected. Ensure OBS is active")
             return
         
-        websockets.broadcast(self.clients, rewardetails)
+        websockets.broadcast(self.clients, json.dumps(rewardetails))
 
     def http_server(self):
         handler = functools.partial(
@@ -45,7 +46,7 @@ class OverlayManager():
         loop = asyncio.get_running_loop()
         loop.run_in_executor(None, self.http_server)
 
-        async with websockets.serve(self.websocket_server, self.host, self.obsport):
+        async with websockets.serve(self.websocket_server, self.host, self.wsport):
             await asyncio.Future()
 
 
@@ -57,7 +58,7 @@ async def test():
 
     asyncio.create_task(overlay.start())
 
-    await asyncio.sleep(2)
+    await asyncio.sleep(5)
     await overlay.redemption_trigger(
         rewardetails={"name": "RewardTest", "path": "./rewards/75/example.png", "chatter": "Bob"}
     )            

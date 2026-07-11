@@ -9,8 +9,16 @@
 		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#111;color:#eee}
 		h1{font-size:2rem}
 	</style>
+	<script>
+		const socket = new WebSocket("ws://localhost:8081");
+		socket.onmessage = function(event) {
+			console.log("Data recieved from websocket: " + event.data);
+			
+		};
+	</script>
 </head>
 <body>
-	<img src="./example.jpg"></a>
+	<img src="./example.jpg">
+	
 </body>
 </html>
