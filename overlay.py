@@ -34,7 +34,7 @@ class OverlayManager():
     def http_server(self):
         handler = functools.partial(
             http.server.SimpleHTTPRequestHandler,
-            directory="./overlay"
+            directory="./"
         )
 
         server = http.server.ThreadingHTTPServer((self.host, self.port), handler)

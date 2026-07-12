@@ -8,17 +8,33 @@
 	<style>
 		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#111;color:#eee}
 		h1{font-size:2rem}
+		.background{opacity: 0; transition: opacity;}
+		.visible{opacity: 1; transition: opacity;}
 	</style>
 	<script>
 		const socket = new WebSocket("ws://localhost:8081");
 		socket.onmessage = function(event) {
+			const obj = JSON.parse(event.data)
 			console.log("Data recieved from websocket: " + event.data);
+			document.getElementById("rewardImage").src = obj.path
+			const background = document.getElementById("background")
+			const reward = document.getElementById("reward")
+			background.className = "visible"
+			setTimeout(() => {
+				reward.setAttribute("class", "visible")
+			}, 2000)
 			
 		};
 	</script>
 </head>
 <body>
-	<img src="./example.jpg">
+	<div>
+		<img src="./overlay/background.jpg" className="background" id="background">
+		<div id="reward" style="opacity: 0;">
+			<img id="rewardImage">
+		</div>
+	</div>
+	
 	
 </body>
 </html>

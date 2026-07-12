@@ -2,6 +2,8 @@ import json
 import twitchio
 import asyncio
 import logging
+import sys
+import shutil
 import os
 from rewards import RewardManager
 from overlay import OverlayManager
@@ -71,7 +73,32 @@ class Gotchapon(twitchio.Client):
 
 
 
+def folder_setup():
+    if not os.path.exists("./rewards"):
+        print("Creating rewards folder and example folders")
+        try: 
+            os.mkdir("./rewards")
+            try:
+                os.mkdir("./rewards/10")
+                os.mkdir("./rewards/50")
+                os.mkdir("./rewards/75")
+            except:
+                print("Unable to create rewards sub folders")
+                raise Exception("Unable to create rewards subfolders")
+        except:
+            print("Unable to create rewards folder")
+            raise Exception("Unable to create rewards folder")
+    else:
+        print("Rewards folder detected")
 
+    if os.path.isfile("./config.json"):
+        return
+    else:
+        print("Creating config file")
+        shutil.copy2("./example-config.json", "./config.json")
+        raise Exception("Config file created, please fill out the file and run the program again")
+
+        
 
 
 async def redeem_subscription(client, redeem_payload): 
@@ -93,6 +120,11 @@ async def chat_subscription(client, chat_payload):
 
 async def main():
     print("Starting Gotchapon Machine")
+    print("Checking for setup files")
+    try:
+        folder_setup()
+    except Exception as e:
+        sys.exit(f"Error while creating setup files {e}")
     with open("config.json") as f:
         config = json.load(f)
 
