@@ -8,31 +8,38 @@
 	<style>
 		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#111;color:#eee}
 		h1{font-size:2rem}
-		.background{opacity: 0; transition: opacity;}
-		.visible{opacity: 1; transition: opacity;}
+		img{transition: opacity 3s ease}
+		.hidden{opacity: 0}
+		.visible{opacity: 1}
+		#rewardImage{position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 12%}
+		#userName{position:absolute; bottom: 15%; left: 50%; transform: translateX(-50%); font-family: 'Times New Roman', Times, serif;font-size: 1.25cm ;color: black; transition: opacity 3.3s ease;}
 	</style>
 	<script>
 		const socket = new WebSocket("ws://localhost:8081");
 		socket.onmessage = function(event) {
 			const obj = JSON.parse(event.data)
 			console.log("Data recieved from websocket: " + event.data);
-			document.getElementById("rewardImage").src = obj.path
 			const background = document.getElementById("background")
-			const reward = document.getElementById("reward")
+			const reward = document.getElementById("rewardImage")
+			reward.src = obj.path
+			const userName = document.getElementById("userName")
+			userName.textContent = obj.chatter
 			background.className = "visible"
 			setTimeout(() => {
-				reward.setAttribute("class", "visible")
+				reward.className = "visible"
+				userName.className = "visible"
 			}, 2000)
 			
 		};
 	</script>
 </head>
 <body>
-	<div>
-		<img src="./overlay/background.jpg" className="background" id="background">
-		<div id="reward" style="opacity: 0;">
-			<img id="rewardImage">
-		</div>
+	<div position="relative">
+		<img src="./overlay/background.jpg" class="hidden" id="background">
+		<!-- <div id="reward"> -->
+		<img id="rewardImage" class="hidden">
+		<a class="hidden" id="userName"></a>
+		<!-- </div> -->
 	</div>
 	
 	
