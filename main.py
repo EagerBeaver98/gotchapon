@@ -55,16 +55,18 @@ class Gotchapon(twitchio.Client):
         await chat_subscription(self, chat_payload)
         await redeem_subscription(self, redeem_payload)
 
+        asyncio.create_task(self.RedeemOverlay.start())
+
         
     async def event_message(self, payload: twitchio.ChatMessage):
-        print(f"Chat message recieved {payload.text} from user {payload.chatter}")
+        print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
         if payload.text.startswith("!redeem"):
-            print("redeeming Gotchapon")
+            print("Redeeming Gotchapon")
             redeemedrewardpath = self.Rewards.redeem_roulette()
             redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
             print(f"Reward redeemed {redeemedrewardname}")
-            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter}, 
-            self.RedeemOverlay.redemption_trigger(rewardetails=reward)
+            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter.name} 
+            await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
 
     

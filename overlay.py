@@ -26,7 +26,7 @@ class OverlayManager():
 
     async def redemption_trigger(self, rewardetails):
         if not self.clients:
-            print("No overlay clients detected. Ensure OBS is active")
+            print("No overlay clients detected. Ensure OBS is active and refresh the browser source")
             return
         
         websockets.broadcast(self.clients, json.dumps(rewardetails))

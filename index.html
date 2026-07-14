@@ -29,7 +29,11 @@
 				reward.className = "visible"
 				userName.className = "visible"
 			}, 2000)
-			
+			setTimeout(() => {
+				reward.className = "hidden"
+				background.className = "hidden"
+				userName.className = "hidden"
+			}, 10000)
 		};
 	</script>
 </head>

@@ -36,7 +36,7 @@ class RewardManager():
         chosenkey = str(random.choices(probabilitykeys, weights=probabilitykeys)[0])
             
         
-        return self.rewarddir + "/" + chosenkey + "/" + random.choice(rewardlist[chosenkey])
+        return "./rewards/" + chosenkey + "/" + random.choice(rewardlist[chosenkey])
     
 
        
