@@ -3,3 +3,4 @@
 config.json
 .tio.tokens.json
 /__pycache__
+redeems.db
