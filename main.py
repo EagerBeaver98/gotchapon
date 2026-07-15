@@ -7,7 +7,7 @@ import shutil
 import os
 from rewards import RewardManager
 from overlay import OverlayManager
-from database import DatabaseManger
+from database import DatabaseManager
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +23,7 @@ class Gotchapon(twitchio.Client):
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
         self.RedeemOverlay = OverlayManager(jsonconfig=self.config)
         self.Rewards = RewardManager()
-        self.Database = DatabaseManger()
+        self.Database = DatabaseManager()
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload):
         await self.add_token(payload.access_token, payload.refresh_token)
@@ -66,8 +66,11 @@ class Gotchapon(twitchio.Client):
             print("Redeeming Gotchapon")
             redeemedrewardpath = self.Rewards.redeem_roulette()
             redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
+            self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemedrewardname, "reward_tier": redeemedrewardpath.split("/")[2]})
             print(f"Reward redeemed {redeemedrewardname}")
-            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter.name} 
+
+            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter.name}
+
             await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
 
