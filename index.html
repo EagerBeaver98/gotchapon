@@ -15,26 +15,35 @@
 		#userName{position:absolute; bottom: 15%; left: 50%; transform: translateX(-50%); font-family: 'Times New Roman', Times, serif;font-size: 1.25cm ;color: black; transition: opacity 3.3s ease;}
 	</style>
 	<script>
-		const socket = new WebSocket("ws://localhost:8081");
-		socket.onmessage = function(event) {
-			const obj = JSON.parse(event.data)
-			console.log("Data recieved from websocket: " + event.data);
-			const background = document.getElementById("background")
-			const reward = document.getElementById("rewardImage")
-			reward.src = obj.path
-			const userName = document.getElementById("userName")
-			userName.textContent = obj.chatter
-			background.className = "visible"
-			setTimeout(() => {
-				reward.className = "visible"
-				userName.className = "visible"
-			}, 2000)
-			setTimeout(() => {
-				reward.className = "hidden"
-				background.className = "hidden"
-				userName.className = "hidden"
-			}, 10000)
-		};
+		function connect() {
+			const socket = new WebSocket("ws://localhost:8081");
+			socket.onmessage = function(event) {
+				const obj = JSON.parse(event.data)
+				console.log("Data recieved from websocket: " + event.data);
+				const background = document.getElementById("background")
+				const reward = document.getElementById("rewardImage")
+				reward.src = obj.path
+				const userName = document.getElementById("userName")
+				userName.textContent = obj.chatter
+				background.className = "visible"
+				setTimeout(() => {
+					reward.className = "visible"
+					userName.className = "visible"
+				}, 2000)
+				setTimeout(() => {
+					reward.className = "hidden"
+					background.className = "hidden"
+					userName.className = "hidden"
+				}, 10000)
+			};
+			socket.onclose = function() {
+				setTimeout(() => {
+					connect()
+				}, 2500)
+			}
+		}
+		connect();
+		
 	</script>
 </head>
 <body>

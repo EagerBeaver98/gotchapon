@@ -7,6 +7,7 @@ import shutil
 import os
 from rewards import RewardManager
 from overlay import OverlayManager
+from database import DatabaseManger
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,6 +23,7 @@ class Gotchapon(twitchio.Client):
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
         self.RedeemOverlay = OverlayManager(jsonconfig=self.config)
         self.Rewards = RewardManager()
+        self.Database = DatabaseManger()
 
     async def event_oauth_authorized(self, payload: twitchio.authentication.UserTokenPayload):
         await self.add_token(payload.access_token, payload.refresh_token)
@@ -60,7 +62,7 @@ class Gotchapon(twitchio.Client):
         
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
-        if payload.text.startswith("!redeem"):
+        if payload.text.startswith("!redeemtest"):
             print("Redeeming Gotchapon")
             redeemedrewardpath = self.Rewards.redeem_roulette()
             redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
@@ -80,28 +82,30 @@ def folder_setup():
         print("Creating rewards folder and example folders")
         try: 
             os.mkdir("./rewards")
-            try:
-                os.mkdir("./rewards/10")
-                os.mkdir("./rewards/50")
-                os.mkdir("./rewards/75")
-            except:
-                print("Unable to create rewards sub folders")
-                raise Exception("Unable to create rewards subfolders")
-        except:
+        except OSError as e:
             print("Unable to create rewards folder")
-            raise Exception("Unable to create rewards folder")
+            raise Exception("Unable to create rewards folder") from e
     else:
         print("Rewards folder detected")
 
-    if os.path.isfile("./config.json"):
-        return
+    if not os.path.isfile("./config.json"):
+        with open("config.json", "w") as f:
+            json.dump({
+                "twitch_channel": "Your Twitch Channel",
+                "owner_id": "Twitch Channel ID",
+                "bot_username": "Twitch Bot Account Name",
+                "bot_id": "Twitch Bot Account ID",
+                "client_id": "Client ID from dev.twitch",
+                "client_secret": "Client secret from dev.twitch",
+                "obs_host": "localhost",
+                "obs_port": 4455,
+                "obs_password": "",
+                "overlay_port": 8080,
+                "overlay_duration_seconds": 8,
+                "websocket_port": 8081
+                }, f)
     else:
-        print("Creating config file")
-        shutil.copy2("./example-config.json", "./config.json")
-        raise Exception("Config file created, please fill out the file and run the program again")
-
-        
-
+        print("Config file detected")
 
 async def redeem_subscription(client, redeem_payload): 
     try:
