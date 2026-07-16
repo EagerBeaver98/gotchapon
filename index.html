@@ -11,8 +11,8 @@
 		img{transition: opacity 3s ease}
 		.hidden{opacity: 0}
 		.visible{opacity: 1}
-		#rewardImage{position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 12%}
-		#userName{position:absolute; bottom: 15%; left: 50%; transform: translateX(-50%); font-family: 'Times New Roman', Times, serif;font-size: 1.25cm ;color: black; transition: opacity 3.3s ease;}
+		#rewardImage{position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 40%}
+		#userName{position:absolute; text-align:center; bottom: 1%; left: 50%; transform: translateX(-50%); font-family: 'Times New Roman', Times, serif;font-size: 1.25cm ;color: black; transition: opacity 3.3s ease;}
 	</style>
 	<script>
 		function connect() {
@@ -24,7 +24,7 @@
 				const reward = document.getElementById("rewardImage")
 				reward.src = obj.path
 				const userName = document.getElementById("userName")
-				userName.textContent = obj.chatter
+				userName.textContent = obj.chatter + " has redeemed " + obj.name
 				background.className = "visible"
 				setTimeout(() => {
 					reward.className = "visible"
@@ -47,7 +47,7 @@
 	</script>
 </head>
 <body>
-	<div position="relative">
+	<div style="position: relative">
 		<img src="./overlay/background.jpg" class="hidden" id="background">
 		<!-- <div id="reward"> -->
 		<img id="rewardImage" class="hidden">

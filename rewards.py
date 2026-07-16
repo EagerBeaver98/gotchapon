@@ -34,12 +34,12 @@ class RewardManager():
             except:
                 print(f"Excluding folder {k}")
         chosenkey = str(random.choices(probabilitykeys, weights=probabilitykeys)[0])
-            
+        chosen_reward = random.choice(rewardlist[chosenkey])
+        reward_path = "./rewards/" + chosenkey + "/" + chosen_reward
         
-        return "./rewards/" + chosenkey + "/" + random.choice(rewardlist[chosenkey])
+        return {"reward_path": reward_path, "reward_tier": chosenkey, "reward_name": chosen_reward.split("/")[-1].split(".")[0]}
     
 
-       
             
         
 def main():

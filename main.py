@@ -44,32 +44,37 @@ class Gotchapon(twitchio.Client):
 
 
     async def setup_hook(self):
-        chat_payload = twitchio.eventsub.ChatMessageSubscription(
-            broadcaster_user_id=self.owner_id,
-            user_id=self.bot_id
-        )
+        
+        if self.tokens:
 
-        redeem_payload = twitchio.eventsub.ChannelPointsRedeemAddSubscription(
-            broadcaster_user_id=self.owner_id,
-            user_id=self.bot_id
-        )
 
-        await chat_subscription(self, chat_payload)
-        await redeem_subscription(self, redeem_payload)
+            chat_payload = twitchio.eventsub.ChatMessageSubscription(
+                broadcaster_user_id=self.owner_id,
+                user_id=self.bot_id
+            )
 
-        asyncio.create_task(self.RedeemOverlay.start())
+            redeem_payload = twitchio.eventsub.ChannelPointsRedeemAddSubscription(
+                broadcaster_user_id=self.owner_id,
+                user_id=self.bot_id
+            )
+
+            await chat_subscription(self, chat_payload)
+            await redeem_subscription(self, redeem_payload)
+
+            asyncio.create_task(self.RedeemOverlay.start())
+        else:
+            print(f"Oauth tokens have not been generated. Follow the authorization instructions in the README file to authorize your twitch account and bot account")
 
         
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
         if payload.text.startswith("!redeemtest"):
             print("Redeeming Gotchapon")
-            redeemedrewardpath = self.Rewards.redeem_roulette()
-            redeemedrewardname = redeemedrewardpath.split("/")[-1].split(".")[0]
-            self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemedrewardname, "reward_tier": redeemedrewardpath.split("/")[2]})
-            print(f"Reward redeemed {redeemedrewardname}")
+            redeemed_reward = self.Rewards.redeem_roulette()
+            self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"]})
+            print(f"Reward redeemed {redeemed_reward["reward_name"]}")
 
-            reward= {"name": redeemedrewardname, "path": redeemedrewardpath, "chatter": payload.chatter.name}
+            reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.chatter.name}
 
             await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
@@ -107,6 +112,8 @@ def folder_setup():
                 "overlay_duration_seconds": 8,
                 "websocket_port": 8081
                 }, f)
+        print("Generated config file. Please edit config.json and run the app again")
+        sys.exit()
     else:
         print("Config file detected")
 
