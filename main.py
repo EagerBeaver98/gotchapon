@@ -75,10 +75,11 @@ class Gotchapon(twitchio.Client):
         if payload.text.startswith("!redeemtest"):
             print("Redeeming Gotchapon")
             redeemed_reward = self.Rewards.redeem_roulette()
-            self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"]})
+            previous_rewards = self.Database.get_rewards()
+            self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
             print(f"Reward redeemed {redeemed_reward["reward_name"]}")
 
-            reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.chatter.name}
+            reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.chatter.name, "previous_rewards": previous_rewards}
 
             await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
@@ -114,7 +115,8 @@ def folder_setup():
                 "obs_password": "",
                 "overlay_port": 8080,
                 "overlay_duration_seconds": 8,
-                "websocket_port": 8081
+                "websocket_port": 8081,
+                "redeem_id": "ID of redeem event in Twitch"
                 }, f)
         print("Generated config file. Please edit config.json and run the app again")
         sys.exit()

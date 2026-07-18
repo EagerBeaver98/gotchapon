@@ -6,24 +6,36 @@ class DatabaseManager():
         
         self.con = sqlite3.connect('redeems.db')
         self.cur = self.con.cursor()
-        res = self.cur.execute("SELECT name FROM sqlite_master WHERE name='Redeems'")
+        res = self.cur.execute("SELECT name FROM sqlite_master WHERE name='Redeems' AND type='table'")
         if res.fetchone() is None:
-            self.cur.execute("CREATE TABLE Redeems(ID INTEGER PRIMARY KEY AUTOINCREMENT, ChatterName varchar(255), ChatterID INTEGER, RewardName varchar(255), RewardTier int, Timestamp TEXT DEFAULT CURRENT_TIMESTAMP) ")
+            self.cur.execute("CREATE TABLE Redeems(ID INTEGER PRIMARY KEY AUTOINCREMENT, ChatterName varchar(255), ChatterID INTEGER, RewardName varchar(255), RewardTier int, RewardPath varchar(255), Timestamp TEXT DEFAULT CURRENT_TIMESTAMP) ")
 
     def new_entry(self, entry):
         res = self.cur.execute("Select ChatterID FROM Redeems WHERE ChatterID = :chatter_id AND RewardName = :reward_name AND RewardTier = :reward_tier" , {"chatter_id": entry["chatter_id"], "reward_name": entry["reward_name"], "reward_tier": entry["reward_tier"]})
         if res.fetchone() is None: 
-            self.cur.execute("INSERT INTO Redeems (ChatterName, ChatterID, RewardName, RewardTier) VALUES (:chatter_name, :chatter_id, :reward_name, :reward_tier)", entry)
+            self.cur.execute("INSERT INTO Redeems (ChatterName, ChatterID, RewardName, RewardTier, RewardPath) VALUES (:chatter_name, :chatter_id, :reward_name, :reward_tier, :reward_path)", entry)
             self.con.commit()
 
     def get_rewards(self, chatterID):
-        req = self.cur.execute("SELECT * FROM Redeems WHERE ChatterID = :chatter_id", {"chatter_id": chatterID})
-        return req.fetchall()
+        req2 = self.cur.execute("PRAGMA table_info(Redeems)")
+        column_req = req2.fetchall()
+        req1 = self.cur.execute("SELECT * FROM Redeems WHERE ChatterID = :chatter_id", {"chatter_id": chatterID})
+        columns = [column[1] for column in column_req]
+        previous_rewards = []
+        for r in req1.fetchall():
+
+            
+            old_reward = dict(zip(columns, r))
+            previous_rewards.append(old_reward)
+
+
+        return previous_rewards
+
 
     
 def test():
     database = DatabaseManager()
-    data = {"chatter_name": "TestUser", "chatter_id": 1234, "reward_name": "RewardTest2", "reward_tier": 321}
+    data = {"chatter_name": "TestUser", "chatter_id": 1234, "reward_name": "RewardTest2", "reward_tier": 321, "reward_path": "./rewards/321/RewardTest2.jpg"}
     database.new_entry(data)
     print(database.get_rewards(1234))
 
