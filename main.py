@@ -61,9 +61,13 @@ class Gotchapon(twitchio.Client):
             await chat_subscription(self, chat_payload)
             await redeem_subscription(self, redeem_payload)
 
-            asyncio.create_task(self.RedeemOverlay.start())
+            
         else:
             print(f"Oauth tokens have not been generated. Follow the authorization instructions in the README file to authorize your twitch account and bot account")
+        
+        asyncio.create_task(self.RedeemOverlay.start())
+
+
 
         
     async def event_message(self, payload: twitchio.ChatMessage):
