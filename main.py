@@ -75,7 +75,7 @@ class Gotchapon(twitchio.Client):
         if payload.text.startswith("!redeemtest"):
             print("Redeeming Gotchapon")
             redeemed_reward = self.Rewards.redeem_roulette()
-            previous_rewards = self.Database.get_rewards()
+            previous_rewards = self.Database.get_rewards(payload.chatter.id)
             self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
             print(f"Reward redeemed {redeemed_reward["reward_name"]}")
 

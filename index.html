@@ -1,23 +1,80 @@
-
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Gotchapon Overlay</title>
 	<style>
-		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#111;color:#eee}
-		h1{font-size:2rem}
-		img{transition: opacity 3s ease}
-		.hidden{opacity: 0}
-		.visible{opacity: 1}
-		#rewardImage{position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); width: 40%}
-		#userName{position:absolute; text-align:center; bottom: 1%; left: 50%; transform: translateX(-50%); font-family: 'Times New Roman', Times, serif;font-size: 1.25cm ;color: black; transition: opacity 3.3s ease; white-space: nowrap;}
+		body {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			margin: 0;
+			font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+			background: #111;
+			color: #eee
+		}
+
+		h1 {
+			font-size: 2rem
+		}
+
+		img {
+			transition: opacity 3s ease
+		}
+
+		.hidden {
+			opacity: 0
+		}
+
+		.visible {
+			opacity: 1
+		}
+
+		#rewardImage {
+			position: absolute;
+			bottom: 5%;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 40%
+		}
+
+		#userName {
+			position: absolute;
+			text-align: center;
+			bottom: 10%;
+			left: 50%;
+			transform: translateX(-50%);
+			font-family: 'Times New Roman', Times, serif;
+			font-size: 1.25cm;
+			color: black;
+			transition: opacity 3.3s ease;
+			white-space: nowrap;
+		}
+
+		#rewardHistoryBody {
+			position: absolute;
+			bottom: 0%;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 8px;
+			max-width: 60%;
+			transition: opacity 3.3s ease;
+		}
+
+		.historyTile {
+			width: 8%;
+		}
 	</style>
 	<script>
 		function connect() {
 			const socket = new WebSocket("ws://localhost:8081");
-			socket.onmessage = function(event) {
+			socket.onmessage = function (event) {
 				const obj = JSON.parse(event.data)
 				console.log("Data recieved from websocket: " + event.data);
 				const background = document.getElementById("background")
@@ -26,35 +83,54 @@
 				const userName = document.getElementById("userName")
 				userName.textContent = obj.chatter + " has redeemed " + obj.name
 				background.className = "visible"
+				const historyContainer = document.getElementById("rewardHistoryBody");
+				historyContainer.innerHTML = "";
+				for (let x = 0; x < obj.previous_rewards.length; x++) {
+						const tile = document.createElement("img");
+						tile.src = obj.previous_rewards[x].RewardPath;
+						tile.className = "historyTile";
+						historyContainer.appendChild(tile);
+				}
 				setTimeout(() => {
 					reward.className = "visible"
 					userName.className = "visible"
+					historyContainer.className = "visible"
+					
 				}, 2000)
 				setTimeout(() => {
 					reward.className = "hidden"
 					background.className = "hidden"
 					userName.className = "hidden"
+					historyContainer.className = "hidden"
 				}, 10000)
 			};
-			socket.onclose = function() {
+			socket.onclose = function () {
 				setTimeout(() => {
 					connect()
 				}, 2500)
 			}
 		}
 		connect();
-		
+
 	</script>
 </head>
+
 <body>
 	<div style="position: relative">
-		<img src="./overlay/background.jpg" class="hidden" id="background">
-		<!-- <div id="reward"> -->
-		<img id="rewardImage" class="hidden">
-		<a class="hidden" id="userName"></a>
+		<div id="rewardBody">
+			<img src="./overlay/background.jpg" class="hidden" id="background">
+			<!-- <div id="reward"> -->
+
+			<img id="rewardImage" class="hidden">
+			<a class="hidden" id="userName"></a>
+		</div>
+		<div id="rewardHistoryBody" class="hidden">
+
+		</div>
 		<!-- </div> -->
 	</div>
-	
-	
+
+
 </body>
+
 </html>
