@@ -61,14 +61,16 @@
 			transform: translateX(-50%);
 			display: flex;
 			flex-wrap: wrap;
+			grid-template-columns: repeat(5, 1fr);
 			justify-content: center;
 			gap: 8px;
-			max-width: 60%;
+			width: 60%;
 			transition: opacity 3.3s ease;
 		}
 
 		.historyTile {
-			width: 8%;
+			width: calc(20% - 8px);
+			max-width: 80px;
 		}
 	</style>
 	<script>

@@ -1,0 +1,2 @@
+class MissingRewardFolderException(Exception):
+    pass
