@@ -73,48 +73,7 @@
 			max-width: 80px;
 		}
 	</style>
-	<script>
-		function connect() {
-			const socket = new WebSocket("ws://localhost:8081");
-			socket.onmessage = function (event) {
-				const obj = JSON.parse(event.data)
-				console.log("Data recieved from websocket: " + event.data);
-				const background = document.getElementById("background")
-				const reward = document.getElementById("rewardImage")
-				reward.src = obj.path
-				const userName = document.getElementById("userName")
-				userName.textContent = obj.chatter + " has redeemed " + obj.name
-				background.className = "visible"
-				const historyContainer = document.getElementById("rewardHistoryBody");
-				historyContainer.innerHTML = "";
-				for (let x = 0; x < obj.previous_rewards.length; x++) {
-						const tile = document.createElement("img");
-						tile.src = obj.previous_rewards[x].RewardPath;
-						tile.className = "historyTile";
-						historyContainer.appendChild(tile);
-				}
-				setTimeout(() => {
-					reward.className = "visible"
-					userName.className = "visible"
-					historyContainer.className = "visible"
-					
-				}, 2000)
-				setTimeout(() => {
-					reward.className = "hidden"
-					background.className = "hidden"
-					userName.className = "hidden"
-					historyContainer.className = "hidden"
-				}, 10000)
-			};
-			socket.onclose = function () {
-				setTimeout(() => {
-					connect()
-				}, 2500)
-			}
-		}
-		connect();
-
-	</script>
+	<script type="module" src="./script.js"></script>
 </head>
 
 <body>
