@@ -5,7 +5,7 @@ from errors import MissingRewardFolderException
 class RewardManager():
     def __init__(self):
         
-        self.rewarddir = os.getcwd() + "/rewards"
+        self.rewarddir = os.getcwd() + "/display/rewards/"
         
         
     def get_reward_tiers(self):
@@ -15,10 +15,10 @@ class RewardManager():
         except FileNotFoundError as e:
             print("Creating rewards folder and example folders")
             try: 
-                os.mkdir("./rewards")
-                os.mkdir("./rewards/10")
-                os.mkdir("./rewards/50")
-                os.mkdir("./rewards/75")
+                os.mkdir("./display/rewards")
+                os.mkdir("./display/rewards/10")
+                os.mkdir("./display/rewards/50")
+                os.mkdir("./display/rewards/75")
             except OSError as e:
                 print("Unable to create rewards folders")
                 raise Exception("Unable to create rewards folders") from e

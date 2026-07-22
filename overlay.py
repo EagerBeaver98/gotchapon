@@ -13,6 +13,12 @@ class OverlayManager():
         self.wsport = jsonconfig["websocket_port"]
         self.port = jsonconfig["overlay_port"]
         self.clients = set()
+        with open("./display/displayconfig.json", "w") as f:
+            json.dump({
+                "overlay_duration_fade_in_gap": jsonconfig["overlay_duration_fade_in_gap"],
+                "overlay_duration_hold": jsonconfig["overlay_duration_hold"],
+                "websocket_port": jsonconfig["websocket_port"]
+            }, f)
 
 
     async def websocket_server(self, websocket):

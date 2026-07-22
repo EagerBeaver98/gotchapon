@@ -7,4 +7,5 @@ redeems.db
 /dist
 /build
 main.spec
-/sounds
+/display/sounds
+/display/displayconfig.json

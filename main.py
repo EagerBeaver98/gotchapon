@@ -101,7 +101,7 @@ def folder_setup():
     except MissingRewardFolderException as e:
         sys.exit(str(e))
     if reward_folders == None:
-        sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./rewards/50/image.png)")
+        sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
 
     if not os.path.isfile("./config.json"):
         with open("config.json", "w") as f:
@@ -125,6 +125,10 @@ def folder_setup():
         sys.exit("Generated config file. Please edit config.json and run the app again")
     else:
         print("Config file detected")
+
+    if not os.path.isdir("./display/sounds"):
+        os.mkdir("./display/sounds")
+        print("Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
 
 async def redeem_subscription(client, redeem_payload): 
     try:
