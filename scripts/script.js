@@ -7,7 +7,7 @@ let busy = false;
 let config
 
 async function loadJSON() {
-    const response = await fetch("./config.json")
+    const response = await fetch("../config.json")
     config = await response.json()
     
 }
