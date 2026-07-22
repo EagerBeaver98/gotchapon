@@ -116,7 +116,8 @@ def folder_setup():
                 "obs_port": 4455,
                 "obs_password": "",
                 "overlay_port": 8080,
-                "overlay_duration_seconds": 8,
+                "overlay_duration_fade_in_gap": 2,
+                "overlay_duration_hold": 8,
                 "websocket_port": 8081,
                 "redeem_id": "ID of redeem event in Twitch"
                 }, f)
