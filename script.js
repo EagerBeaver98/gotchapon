@@ -41,25 +41,28 @@ function changeReward() {
 }
 
 function makeHidden() {
-    setTimeout(() => {
+
         reward.className = "hidden";
         background.className = "hidden";
         userName.className = "hidden";
         historyContainer.className = "hidden";
         busy = false
-    }, displayDuration * 1000);
+
 }
 
 
 function queueManager() {
     queue.shift()
-    if (queue.length > 0) {
-        setTimeout(() => {
+    setTimeout(() => {
+        if (queue.length > 0) {
+        
             changeReward()
-        }, displayDuration * 1000)
-    } else {
+        }
+    else {
         makeHidden()
     }
+    }, displayDuration * 1000)
+    
 }
 
 function connect() {
