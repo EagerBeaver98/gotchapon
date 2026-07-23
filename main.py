@@ -128,7 +128,15 @@ def folder_setup():
 
     if not os.path.isdir("./display/sounds"):
         os.mkdir("./display/sounds")
-        print("Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
+        sys.exit("Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
+    else :
+        sound_list = list(os.listdir("./display/sounds"))
+        sound_dir = {}
+        for sound in sound_list:
+            stripped_name = sound.split(".")[0]
+            sound_dir[stripped_name] = sound
+        with open ("./display/soundsDir.json", "w") as f:
+            json.dump(sound_dir, f)    
 
 async def redeem_subscription(client, redeem_payload): 
     try:

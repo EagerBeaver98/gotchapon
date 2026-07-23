@@ -9,3 +9,4 @@ redeems.db
 main.spec
 /display/sounds
 /display/displayconfig.json
+/display/soundsDir.json

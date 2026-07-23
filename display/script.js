@@ -4,44 +4,55 @@ const historyContainer = document.getElementById("rewardHistoryBody");
 const userName = document.getElementById("userName");
 const queue = [];
 let busy = false;
-let config;
-let coinSound
-let rumbleSound
-let crankSound
-let celebrateSound
-let openSound
+const sounds = {};
 
-
-
-// function getSoundFiles () {
-    
-// }
+async function getSoundFiles() {
+  const response = await fetch("./soundsDir.json");
+  const soundsDict = await response.json();
+  Object.keys(soundsDict).forEach((key) => {
+    sounds[key] = new Audio("./sounds/" + soundsDict[key]);
+  });
+}
 
 async function loadJSON() {
   const response = await fetch("./displayconfig.json");
-  config = await response.json();
+  const configData = await response.json();
+  return configData;
 }
 
 function makeVisible() {
-//   coin.play();
+  sounds.coin.play();
   background.className = "visible";
-//   setTimeout(() => {
-    historyContainer.innerHTML = "";
-    userName.textContent = queue[0].chatter + " has redeemed " + queue[0].name;
-    reward.src = queue[0].path;
-    for (let x = 0; x < queue[0].previous_rewards.length; x++) {
-      const tile = document.createElement("img");
-      tile.src = queue[0].previous_rewards[x].RewardPath;
-      tile.className = "historyTile";
-      historyContainer.appendChild(tile);
-    }
+  setTimeout(() => {
+    sounds.crank.play();
     setTimeout(() => {
-      reward.className = "visible";
-      userName.className = "visible";
-      historyContainer.className = "visible";
-      queueManager();
-    }, fadeInDelay * 1000);
-//   }, coin.duration * 1000);
+      sounds.rumble.play();
+      setTimeout(() => {
+        sounds.open.play();
+        historyContainer.innerHTML = "";
+        userName.textContent =
+          queue[0].chatter + " has redeemed " + queue[0].name;
+        reward.src = queue[0].path;
+        for (let x = 0; x < queue[0].previous_rewards.length; x++) {
+          const tile = document.createElement("img");
+          tile.src = queue[0].previous_rewards[x].RewardPath;
+          tile.className = "historyTile";
+          historyContainer.appendChild(tile);
+        }
+        setTimeout(() => {
+          reward.className = "visible";
+          userName.className = "visible";
+          historyContainer.className = "visible";
+          setTimeout(() => {
+            queueManager();
+            sounds.celebrate.play()
+          }, sounds.open.duration * 1000)
+          
+          
+        }, fadeInDelay * 1000);
+      }, sounds.rumble.duration * 1000);
+    }, sounds.crank.duration * 1000);
+  }, sounds.coin.duration * 1000);
 }
 
 function changeReward() {
@@ -91,8 +102,8 @@ function connect() {
   };
 }
 
-await loadJSON();
-// getSoundFiles();
+const config = await loadJSON();
+await getSoundFiles();
 const fadeInDelay = config.overlay_duration_fade_in_gap;
 const displayDuration = config.overlay_duration_hold;
 connect();

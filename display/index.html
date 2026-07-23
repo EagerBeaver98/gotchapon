@@ -6,13 +6,20 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Gotchapon Overlay</title>
 	<style>
+		@font-face {
+			font-family: qilka;
+			src: url("Qilka-Bold.ttf");
+		}
+
 		body {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-direction: column;
 			height: 100vh;
+			width: 100%;
 			margin: 0;
-			font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+			font-family: qilka;
 			background: #111;
 			color: #eee
 		}
@@ -44,10 +51,9 @@
 		#userName {
 			position: absolute;
 			text-align: center;
-			bottom: 10%;
+			bottom: 15%;
 			left: 50%;
 			transform: translateX(-50%);
-			font-family: 'Times New Roman', Times, serif;
 			font-size: 1.25cm;
 			color: black;
 			transition: opacity 3.3s ease;
@@ -55,29 +61,47 @@
 		}
 
 		#rewardHistoryBody {
-			position: absolute;
-			bottom: 0%;
-			left: 50%;
-			transform: translateX(-50%);
 			display: flex;
 			flex-wrap: wrap;
 			grid-template-columns: repeat(5, 1fr);
 			justify-content: center;
 			gap: 8px;
 			width: 60%;
+			margin: 0 auto;
 			transition: opacity 3.3s ease;
+		}
+
+		#rewardBody {
+			width: 100%;
+			height: 75vh;
 		}
 
 		.historyTile {
 			width: calc(20% - 8px);
 			max-width: 80px;
 		}
+
+		#background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+
+		}
+
+		#positionalDiv {
+			position: relative;
+			height: 100vh;
+			width: 100%;
+		}
 	</style>
 	<script type="module" src="./script.js"></script>
 </head>
 
 <body>
-	<div style="position: relative">
+	<div id="positionalDiv">
 		<div id="rewardBody">
 			<img src="./background.jpg" class="hidden" id="background">
 			<!-- <div id="reward"> -->
