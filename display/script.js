@@ -34,19 +34,27 @@ function makeVisible() {
           queue[0].chatter + " has redeemed " + queue[0].name;
         reward.src = queue[0].path;
         for (let x = 0; x < queue[0].previous_rewards.length; x++) {
+          const wrapper = document.createElement('div')
+          wrapper.className = "historyTileWrapper"
           const tile = document.createElement("img");
           tile.src = queue[0].previous_rewards[x].RewardPath;
           tile.className = "historyTile";
-          historyContainer.appendChild(tile);
+          wrapper.appendChild(tile);
+          const counter = document.createElement("span")
+          counter.className = "counter"
+          counter.textContent = queue[0].previous_rewards[x].CountOfRedeems
+          wrapper.appendChild(counter)
+          historyContainer.appendChild(wrapper)
         }
         setTimeout(() => {
           reward.className = "visible";
           userName.className = "visible";
           historyContainer.className = "visible";
+          sounds.celebrate.play()
           setTimeout(() => {
             queueManager();
-            sounds.celebrate.play()
-          }, sounds.open.duration * 1000)
+            
+          }, displayDuration * 1000)
           
           
         }, fadeInDelay * 1000);
