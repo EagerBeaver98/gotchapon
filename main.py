@@ -5,6 +5,7 @@ import logging
 import sys
 import shutil
 import os
+from tkinter import messagebox, Tk
 from rewards import RewardManager
 from overlay import OverlayManager
 from database import DatabaseManager
@@ -12,6 +13,8 @@ from errors import MissingRewardFolderException
 
 logging.basicConfig(level=logging.INFO)
 
+root = Tk()
+root.withdraw()
 class Gotchapon(twitchio.Client):
     def __init__(self, config):
         super().__init__(
@@ -99,8 +102,10 @@ def folder_setup():
     try:
         reward_folders = rewards.get_reward_tiers()
     except MissingRewardFolderException as e:
+        messagebox.showerror("Gotchapon - Reward Folder Error", str(e))
         sys.exit(str(e))
     if reward_folders == None:
+        messagebox.showerror("Gotchapon - Rewards Missing", "No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
         sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
 
     if not os.path.isfile("./config.json"):
@@ -119,15 +124,20 @@ def folder_setup():
                 "overlay_duration_fade_in_gap": 2,
                 "overlay_duration_hold": 8,
                 "websocket_port": 8081,
-                "redeem_id": "ID of redeem event in Twitch"
+                "redeem_id": "ID of redeem event in Twitch",
+                "font-color": "black",
+                "font-family": "Name of .ttf file in display folder",
+                "font-shadow-color": "white" 
                 }, f)
         print("Generated config file. Please edit config.json and run the app again")
+        messagebox.showerror("Gotchapon - Config Error", "Generated config file. Please edit config.json and run the app again")
         sys.exit("Generated config file. Please edit config.json and run the app again")
     else:
         print("Config file detected")
 
     if not os.path.isdir("./display/sounds"):
         os.mkdir("./display/sounds")
+        messagebox.showerror("Gotchapon - Sounds Folder Setup", "Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
         sys.exit("Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
     else :
         sound_list = list(os.listdir("./display/sounds"))
@@ -161,7 +171,7 @@ async def main():
     try:
         folder_setup()
     except Exception as e:
-        sys.exit(f"Error while creating setup files {e}")
+        sys.exit(f"Error while creating setup files {e.__cause__}")
     with open("config.json") as f:
         config = json.load(f)
 
