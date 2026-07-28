@@ -2,6 +2,7 @@ const background = document.getElementById("background");
 const reward = document.getElementById("rewardImage");
 const historyContainer = document.getElementById("rewardHistoryBody");
 const userName = document.getElementById("userName");
+const body = document.body;
 const queue = [];
 let busy = false;
 const sounds = {};
@@ -34,29 +35,26 @@ function makeVisible() {
           queue[0].chatter + " has redeemed " + queue[0].name;
         reward.src = queue[0].path;
         for (let x = 0; x < queue[0].previous_rewards.length; x++) {
-          const wrapper = document.createElement('div')
-          wrapper.className = "historyTileWrapper"
+          const wrapper = document.createElement("div");
+          wrapper.className = "historyTileWrapper";
           const tile = document.createElement("img");
           tile.src = queue[0].previous_rewards[x].RewardPath;
           tile.className = "historyTile";
           wrapper.appendChild(tile);
-          const counter = document.createElement("span")
-          counter.className = "counter"
-          counter.textContent = queue[0].previous_rewards[x].CountOfRedeems
-          wrapper.appendChild(counter)
-          historyContainer.appendChild(wrapper)
+          const counter = document.createElement("span");
+          counter.className = "counter";
+          counter.textContent = queue[0].previous_rewards[x].CountOfRedeems;
+          wrapper.appendChild(counter);
+          historyContainer.appendChild(wrapper);
         }
         setTimeout(() => {
           reward.className = "visible";
           userName.className = "visible";
           historyContainer.className = "visible";
-          sounds.celebrate.play()
+          sounds.celebrate.play();
           setTimeout(() => {
             queueManager();
-            
-          }, displayDuration * 1000)
-          
-          
+          }, displayDuration * 1000);
         }, fadeInDelay * 1000);
       }, sounds.rumble.duration * 1000);
     }, sounds.crank.duration * 1000);
@@ -114,4 +112,24 @@ const config = await loadJSON();
 await getSoundFiles();
 const fadeInDelay = config.overlay_duration_fade_in_gap;
 const displayDuration = config.overlay_duration_hold;
+if (
+  config.font_family != undefined &&
+  config.font_family != "Name of .ttf file in display folder"
+) {
+  const font = await new FontFace(
+    config.font_family.split(".").at(-2),
+    `url("./${config.font_family}")`,
+  );
+  document.fonts.add(font);
+  body.style.setProperty("font-family", config.font_family.split(".").at(-2));
+}
+if (config.font_color != undefined) {
+  userName.style.setProperty("color", config.font_color);
+}
+if (config.font_shadow_color != undefined) {
+  userName.style.setProperty(
+    "text-shadow",
+    "2px 2px " + config.font_shadow_color,
+  );
+}
 connect();

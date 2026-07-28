@@ -17,7 +17,10 @@ class OverlayManager():
             json.dump({
                 "overlay_duration_fade_in_gap": jsonconfig["overlay_duration_fade_in_gap"],
                 "overlay_duration_hold": jsonconfig["overlay_duration_hold"],
-                "websocket_port": jsonconfig["websocket_port"]
+                "websocket_port": jsonconfig["websocket_port"],
+                "font_color": jsonconfig["font-color"],
+                "font_family": jsonconfig["font-family"],
+                "font_shadow_color": jsonconfig["font-shadow-color"]
             }, f)
 
 
