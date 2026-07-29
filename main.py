@@ -171,7 +171,7 @@ async def main():
     try:
         folder_setup()
     except Exception as e:
-        messagebox.showerror(f"Error while creating setup files {e.__cause__}")
+        messagebox.showerror("Error while creating setup files", str({e.__cause__}))
         sys.exit(f"Error while creating setup files {e.__cause__}")
     with open("config.json") as f:
         config = json.load(f)
