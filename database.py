@@ -1,10 +1,10 @@
 import sqlite3
-
+from pathing import DATABASE_PATH
 
 class DatabaseManager(): 
     def __init__(self): 
         
-        self.con = sqlite3.connect('redeems.db')
+        self.con = sqlite3.connect(DATABASE_PATH)
         self.cur = self.con.cursor()
         self.cur.execute("CREATE TABLE IF NOT EXISTS Redeems(ID INTEGER PRIMARY KEY AUTOINCREMENT, ChatterName varchar(255), ChatterID INTEGER, RewardName varchar(255), RewardTier int, RewardPath varchar(255), Timestamp TEXT DEFAULT CURRENT_TIMESTAMP) ")
 

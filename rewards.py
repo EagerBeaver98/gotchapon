@@ -16,10 +16,13 @@ class RewardManager():
         except FileNotFoundError as e:
             print("Creating rewards folder and example folders")
             try: 
-                os.mkdir("./display/rewards")
-                os.mkdir("./display/rewards/10")
-                os.mkdir("./display/rewards/50")
-                os.mkdir("./display/rewards/75")
+                ten = self.rewarddir / 10
+                fifty = self.rewarddir / 50
+                sevenfive = self.rewarddir / 75
+                self.rewarddir.mkdir()
+                ten.mkdir()
+                fifty.mkdir()
+                sevenfive.mkdir()
             except OSError as e:
                 print("Unable to create rewards folders")
                 raise Exception("Unable to create rewards folders") from e
@@ -29,7 +32,7 @@ class RewardManager():
             
         reward_tiers = []
         for rt in reward_folders:
-            if len(os.listdir(self.rewarddir + "/" + rt)) == 0:
+            if len(os.listdir(self.rewarddir / rt)) == 0:
                 print(f"Folder {rt} is empty, skipping")
             else:
                 try:
@@ -66,7 +69,7 @@ class RewardManager():
                 chosen_tier = k
                 break
 
-        chosen_reward = random.choice(os.listdir(self.rewarddir + "/" + str(chosen_tier)))
+        chosen_reward = random.choice(os.listdir(self.rewarddir / str(chosen_tier)))
         reward_path = "./rewards/" + str(chosen_tier) + "/" + chosen_reward
         
         return {"reward_path": reward_path, "reward_tier": chosen_tier, "reward_name": chosen_reward.split(".")[0]}
