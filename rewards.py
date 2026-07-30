@@ -1,11 +1,12 @@
 import os
 import random
 from errors import MissingRewardFolderException
+from pathing import REWARDS_DIR
 
 class RewardManager():
     def __init__(self):
         
-        self.rewarddir = os.getcwd() + "/display/rewards/"
+        self.rewarddir = REWARDS_DIR
         
         
     def get_reward_tiers(self):

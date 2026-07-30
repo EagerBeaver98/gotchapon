@@ -4,6 +4,7 @@ import json
 import http.server
 import functools
 import os
+from pathing import DISPLAY_CONFIG_PATH, DISPLAY_DIR
 
 
 class OverlayManager():
@@ -13,7 +14,7 @@ class OverlayManager():
         self.wsport = jsonconfig["websocket_port"]
         self.port = jsonconfig["overlay_port"]
         self.clients = set()
-        with open("./display/displayconfig.json", "w") as f:
+        with open(DISPLAY_CONFIG_PATH, "w") as f:
             json.dump({
                 "overlay_duration_fade_in_gap": jsonconfig["overlay_duration_fade_in_gap"],
                 "overlay_duration_hold": jsonconfig["overlay_duration_hold"],
@@ -43,7 +44,7 @@ class OverlayManager():
     def http_server(self):
         handler = functools.partial(
             http.server.SimpleHTTPRequestHandler,
-            directory="./display"
+            directory=DISPLAY_DIR
         )
 
         server = http.server.ThreadingHTTPServer((self.host, self.port), handler)

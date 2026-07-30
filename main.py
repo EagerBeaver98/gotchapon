@@ -10,6 +10,7 @@ from rewards import RewardManager
 from overlay import OverlayManager
 from database import DatabaseManager
 from errors import MissingRewardFolderException
+from pathing import SOUNDS_DIR, CONFIG_PATH, SOUNDS_MANIFEST_PATH
 
 logging.basicConfig(level=logging.INFO)
 
@@ -108,8 +109,8 @@ def folder_setup():
         messagebox.showerror("Gotchapon - Rewards Missing", "No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
         sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
 
-    if not os.path.isfile("./config.json"):
-        with open("config.json", "w") as f:
+    if not CONFIG_PATH.is_file():
+        with open(CONFIG_PATH, "w") as f:
             json.dump({
                 "twitch_channel": "Your Twitch Channel",
                 "owner_id": "Twitch Channel ID",
@@ -135,17 +136,17 @@ def folder_setup():
     else:
         print("Config file detected")
 
-    if not os.path.isdir("./display/sounds"):
-        os.mkdir("./display/sounds")
+    if not SOUNDS_DIR.exists():
+        SOUNDS_DIR.mkdir()
         messagebox.showerror("Gotchapon - Sounds Folder Setup", "Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
         sys.exit("Sounds folder created. Enter in your sounds for the redemption event. Be sure to name them:\ncoin\ncrank\nrumble\nopen\ncelebrate\nFile type does not matter")
     else :
-        sound_list = list(os.listdir("./display/sounds"))
+        sound_list = list(os.listdir(SOUNDS_DIR))
         sound_dir = {}
         for sound in sound_list:
             stripped_name = sound.split(".")[0]
             sound_dir[stripped_name] = sound
-        with open ("./display/soundsDir.json", "w") as f:
+        with open (SOUNDS_MANIFEST_PATH, "w") as f:
             json.dump(sound_dir, f)    
 
 async def redeem_subscription(client, redeem_payload): 
