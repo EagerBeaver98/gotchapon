@@ -59,10 +59,10 @@ class RewardManager():
             return
         if probabilitykeys == None:
             return None
-
-        fallback_tier = probabilitykeys[len(probabilitykeys) - 1]
+        #Writes most probable folder as a fallback
+        chosen_tier = probabilitykeys[len(probabilitykeys) - 1]
         
-        chosen_tier = fallback_tier
+        
         for k in probabilitykeys:
             
             if (k >= random.randrange(1, 101, 1)):
