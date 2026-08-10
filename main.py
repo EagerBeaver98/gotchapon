@@ -5,6 +5,7 @@ import logging
 import sys
 import shutil
 import os
+from rich.console import Console
 from tkinter import messagebox, Tk
 from rewards import RewardManager
 from overlay import OverlayManager
@@ -13,6 +14,8 @@ from errors import MissingRewardFolderException
 from pathing import SOUNDS_DIR, CONFIG_PATH, SOUNDS_MANIFEST_PATH, BACKGROUND_PATH
 
 logging.basicConfig(level=logging.INFO)
+
+console = Console()
 
 root = Tk()
 root.withdraw()
@@ -108,7 +111,7 @@ def folder_setup():
     if reward_folders == None:
         messagebox.showerror("Gotchapon - Rewards Missing", "No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
         sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
-    if not BACKGROUND_PATH.exists():
+    if BACKGROUND_PATH == None:
         messagebox.showerror("Gotchapon - Background Image Missing", "Make sure to add a background image to the display folder")
         sys.exit("Make sure to add a background image to the display folder")
     if not CONFIG_PATH.is_file():
@@ -154,7 +157,7 @@ def folder_setup():
 async def redeem_subscription(client, redeem_payload): 
     try:
         await client.subscribe_websocket(payload=redeem_payload, as_bot=True)
-        print("Channel Point Redeem EventSub successful")
+        console.print("[green]Channel Point Redeem EventSub successful")
     except twitchio.HTTPException as e:
         print(f"Status: {e.status}")
         print(f"Details: {e.extra.get('message')}")
@@ -162,20 +165,20 @@ async def redeem_subscription(client, redeem_payload):
 async def chat_subscription(client, chat_payload): 
     try: 
         await client.subscribe_websocket(payload=chat_payload, as_bot=True)
-        print("Chat Message EventSub subscription successful")
+        console.print("[green]Chat Message EventSub subscription successful")
     except twitchio.HTTPException as e:
         print(f"Status: {e.status}")
         print(f"Details: {e.extra.get('message')}")
 
 
 async def main():
-    print(f"[green]Starting Gotchapon Machine")
+    console.print("[green]Starting Gotchapon Machine")
     print("Checking for setup files")
     try:
         folder_setup()
     except Exception as e:
         messagebox.showerror("Error while creating setup files", str(e))
-        sys.exit(f"Error while creating setup files {e.__cause__}")
+        sys.exit(f"Error while creating setup files {e}")
     with open(CONFIG_PATH) as f:
         config = json.load(f)
 
