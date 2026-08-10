@@ -14,3 +14,4 @@ DISPLAY_CONFIG_PATH = DISPLAY_DIR / "displayconfig.json"
 
 CONFIG_PATH = BASE_DIR / "config.json"
 DATABASE_PATH = BASE_DIR / "redeems.db"
+BACKGROUND_PATH = DISPLAY_DIR.glob("background*")

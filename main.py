@@ -10,7 +10,7 @@ from rewards import RewardManager
 from overlay import OverlayManager
 from database import DatabaseManager
 from errors import MissingRewardFolderException
-from pathing import SOUNDS_DIR, CONFIG_PATH, SOUNDS_MANIFEST_PATH
+from pathing import SOUNDS_DIR, CONFIG_PATH, SOUNDS_MANIFEST_PATH, BACKGROUND_PATH
 
 logging.basicConfig(level=logging.INFO)
 
@@ -108,7 +108,9 @@ def folder_setup():
     if reward_folders == None:
         messagebox.showerror("Gotchapon - Rewards Missing", "No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
         sys.exit("No files in rewards folders. Add at least 1 reward image to a tier folder (ex. ./display/rewards/50/image.png)")
-
+    if not BACKGROUND_PATH.exists():
+        messagebox.showerror("Gotchapon - Background Image Missing", "Make sure to add a background image to the display folder")
+        sys.exit("Make sure to add a background image to the display folder")
     if not CONFIG_PATH.is_file():
         with open(CONFIG_PATH, "w") as f:
             json.dump({
@@ -167,12 +169,12 @@ async def chat_subscription(client, chat_payload):
 
 
 async def main():
-    print("Starting Gotchapon Machine")
+    print(f"[green]Starting Gotchapon Machine")
     print("Checking for setup files")
     try:
         folder_setup()
     except Exception as e:
-        messagebox.showerror("Error while creating setup files", str({e.__cause__}))
+        messagebox.showerror("Error while creating setup files", str(e))
         sys.exit(f"Error while creating setup files {e.__cause__}")
     with open(CONFIG_PATH) as f:
         config = json.load(f)
