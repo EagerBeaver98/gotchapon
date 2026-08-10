@@ -4,7 +4,7 @@ import json
 import http.server
 import functools
 import os
-from pathing import DISPLAY_CONFIG_PATH, DISPLAY_DIR
+from pathing import DISPLAY_CONFIG_PATH, DISPLAY_DIR, BACKGROUND_PATH
 
 
 class OverlayManager():
@@ -21,7 +21,8 @@ class OverlayManager():
                 "websocket_port": jsonconfig["websocket_port"],
                 "font_color": jsonconfig["font-color"],
                 "font_family": jsonconfig["font-family"],
-                "font_shadow_color": jsonconfig["font-shadow-color"]
+                "font_shadow_color": jsonconfig["font-shadow-color"],
+                "background_image": str(BACKGROUND_PATH)
             }, f)
 
 
