@@ -179,12 +179,21 @@ async def main():
     except Exception as e:
         messagebox.showerror("Error while creating setup files", str(e))
         sys.exit(f"Error while creating setup files {e}")
-    with open(CONFIG_PATH) as f:
-        config = json.load(f)
-
-    bot = Gotchapon(config)
-    async with bot:
-        await bot.start()
+    try:
+        with open(CONFIG_PATH) as f:
+            config = json.load(f)
+    except Exception as e:
+        messagebox.showerror("Error Reading Config.json", str(e))
+        console.print(f"[red bold]Error Reading Config.json - [white /bold]{e}")
+        sys.exit()
+    try:
+        bot = Gotchapon(config)
+        async with bot:
+            await bot.start()
+    except Exception as e:
+        messagebox.showerror("Error starting Bot", str(e))
+        console.print(f"[red bold]Error starting Bot - [white /bold]{e}")
+        sys.exit()
 
     
 if __name__ == "__main__":
