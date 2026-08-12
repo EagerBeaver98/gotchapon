@@ -112,7 +112,12 @@ const config = await loadJSON();
 await getSoundFiles();
 const fadeInDelay = config.overlay_duration_fade_in_gap;
 const displayDuration = config.overlay_duration_hold;
-background.src = config.background_image.split("/").at(-1)
+if (config.background_image.indexOf("/") != -1) {
+  background.src = config.background_image.split("/").at(-1)  
+} else {
+  background.src = config.background_image.split("\\").at(-1)
+}
+
 if (
   config.font_family != undefined &&
   config.font_family != "Name of .ttf file in display folder"

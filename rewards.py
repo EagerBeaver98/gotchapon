@@ -16,9 +16,9 @@ class RewardManager():
         except FileNotFoundError as e:
             print("Creating rewards folder and example folders")
             try: 
-                ten = self.rewarddir / 10
-                fifty = self.rewarddir / 50
-                sevenfive = self.rewarddir / 75
+                ten = self.rewarddir / "10"
+                fifty = self.rewarddir / "50"
+                sevenfive = self.rewarddir / "75"
                 self.rewarddir.mkdir()
                 ten.mkdir()
                 fifty.mkdir()

@@ -98,7 +98,19 @@ class Gotchapon(twitchio.Client):
     
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
         print("channel points redeemed")
+        if payload.reward.id == self.redeem_id:
+            print("Redeeming Gotchapon")
+            redeemed_reward = self.Rewards.redeem_roulette()
+            if redeemed_reward == None:
+                print("No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
+            else:    
+                previous_rewards = self.Database.get_rewards(payload.user.id)
+                self.Database.new_entry({"chatter_name": payload.user.name, "chatter_id": payload.user.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
+                print(f"Reward redeemed {redeemed_reward["reward_name"]}")
 
+                reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.user.name, "previous_rewards": previous_rewards}
+
+                await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
 
 def folder_setup():
