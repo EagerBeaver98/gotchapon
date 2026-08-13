@@ -3,7 +3,6 @@ import twitchio
 import asyncio
 import logging
 import sys
-import shutil
 import os
 from rich.console import Console
 from tkinter import messagebox, Tk
@@ -28,6 +27,7 @@ class Gotchapon(twitchio.Client):
         )
         self.config = config
         self.owner_id=str(config["owner_id"])
+        self.redeem_id = config["redeem_id"]
         print(f"Initializing bot {config["bot_username"]} with channel: {config["twitch_channel"]}")
         self.RedeemOverlay = OverlayManager(jsonconfig=self.config)
         self.Rewards = RewardManager()
@@ -81,10 +81,10 @@ class Gotchapon(twitchio.Client):
     async def event_message(self, payload: twitchio.ChatMessage):
         print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
         if payload.text.startswith("!redeemtest"):
-            print("Redeeming Gotchapon")
+            console.print("[blue]Redeeming Gotchapon")
             redeemed_reward = self.Rewards.redeem_roulette()
             if redeemed_reward == None:
-                print("No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
+                console.print("[red]No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
             else:    
                 previous_rewards = self.Database.get_rewards(payload.chatter.id)
                 self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
@@ -98,8 +98,8 @@ class Gotchapon(twitchio.Client):
     
     async def event_custom_redemption_add(self, payload: twitchio.ChannelPointsRedemptionAdd):
         print("channel points redeemed")
-        if payload.reward.id == self.redeem_id:
-            print("Redeeming Gotchapon")
+        if str(payload.reward.id) == self.redeem_id:
+            console.print("[blue]Redeeming Gotchapon")
             redeemed_reward = self.Rewards.redeem_roulette()
             if redeemed_reward == None:
                 print("No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
