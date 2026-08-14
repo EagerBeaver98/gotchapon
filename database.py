@@ -24,6 +24,9 @@ class DatabaseManager():
 
         return previous_rewards
 
+    def close_database(self):
+        self.con.close()
+
 
     
 def test():

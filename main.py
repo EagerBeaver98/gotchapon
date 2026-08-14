@@ -186,6 +186,7 @@ async def chat_subscription(client, chat_payload):
 async def main():
     console.print("[green]Starting Gotchapon Machine")
     print("Checking for setup files")
+    bot = None
     try:
         folder_setup()
     except Exception as e:
@@ -206,6 +207,10 @@ async def main():
         messagebox.showerror("Error starting Bot", str(e))
         console.print(f"[red bold]Error starting Bot - [white /bold]{e}")
         sys.exit()
+    finally:
+        if bot is not None:
+            bot.Database.close_database()
+        
 
     
 if __name__ == "__main__":
