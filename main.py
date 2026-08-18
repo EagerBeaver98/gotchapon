@@ -78,21 +78,21 @@ class Gotchapon(twitchio.Client):
 
 
         
-    async def event_message(self, payload: twitchio.ChatMessage):
-        print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
-        if payload.text.startswith("!redeemtest"):
-            console.print("[blue]Redeeming Gotchapon")
-            redeemed_reward = self.Rewards.redeem_roulette()
-            if redeemed_reward == None:
-                console.print("[red]No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
-            else:    
-                previous_rewards = self.Database.get_rewards(payload.chatter.id)
-                self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
-                print(f"Reward redeemed {redeemed_reward["reward_name"]}")
+    # async def event_message(self, payload: twitchio.ChatMessage):
+    #     print(f"Chat message recieved {payload.text} from user {payload.chatter.name}")
+    #     if payload.text.startswith("!redeemtest"):
+    #         console.print("[blue]Redeeming Gotchapon")
+    #         redeemed_reward = self.Rewards.redeem_roulette()
+    #         if redeemed_reward == None:
+    #             console.print("[red]No rewards in folders. Please check rewards folder and ensure images have been added to the sub folders")
+    #         else:    
+    #             previous_rewards = self.Database.get_rewards(payload.chatter.id)
+    #             self.Database.new_entry({"chatter_name": payload.chatter.name, "chatter_id": payload.chatter.id, "reward_name": redeemed_reward["reward_name"], "reward_tier": redeemed_reward["reward_tier"], "reward_path": redeemed_reward["reward_path"]})
+    #             print(f"Reward redeemed {redeemed_reward["reward_name"]}")
 
-                reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.chatter.name, "previous_rewards": previous_rewards}
+    #             reward= {"name": redeemed_reward["reward_name"], "path": redeemed_reward["reward_path"], "chatter": payload.chatter.name, "previous_rewards": previous_rewards}
 
-                await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
+    #             await self.RedeemOverlay.redemption_trigger(rewardetails=reward)
 
 
     
